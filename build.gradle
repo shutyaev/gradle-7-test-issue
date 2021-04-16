@@ -1,0 +1,37 @@
+plugins {
+	id 'java'
+	id 'org.javamodularity.moduleplugin' version '1.7.0'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.1'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
+}
+
+test {
+	useJUnitPlatform()
+	moduleOptions {
+		runOnClasspath = true
+	}
+}
+
+// disabling gradle modularity support
+java {
+	modularity.inferModulePath = false
+}
+tasks.withType(JavaCompile) {
+	modularity.inferModulePath = false
+}
+
+// workaround for https://github.com/java9-modularity/gradle-modules-plugin/issues/183
+configurations {
+	testCompile {
+		extendsFrom testImplementation
+	}
+}
+
